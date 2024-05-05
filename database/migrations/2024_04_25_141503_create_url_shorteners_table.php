@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('url_shorteners', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
             $table->string('long');
             $table->string('short');
+            $table->integer('counter')->default(0);
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

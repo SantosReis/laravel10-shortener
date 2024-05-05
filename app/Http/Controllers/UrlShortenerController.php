@@ -29,9 +29,21 @@ class UrlShortenerController extends Controller
     }
 
     public function redirect($shortener){
-        $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortener)->first();
+        
+        $urlShortenerService = new UrlShortenerService();
+        $origin = $urlShortenerService->redirectToOrigin($shortener);
 
-        return $response ? redirect($response->long) : $this->error('', 'Invalid address', 404);
+        return $origin ? redirect($origin) : $this->error('', 'Invalid address', 404);
         // return $response ? redirect($response->long) : abort(404);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function delete($id)
+    {
+        $post = UrlShortener::find($id)->delete();
+        return response()->json([], 204);
+    }
+
 }

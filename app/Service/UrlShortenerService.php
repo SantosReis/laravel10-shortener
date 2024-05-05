@@ -59,11 +59,27 @@ class UrlShortenerService {
   {
 
     $urlShortener = new UrlShortener;
+    $urlShortener->user_id = auth()->user()->id;
     $urlShortener->long = $longUrl;
     $urlShortener->short = $shortenedUrl;
     $urlShortener->save();
 
     return (bool)$urlShortener;
+  }
+
+
+  public function redirectToOrigin($shortener){
+
+    $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortener)->first();
+
+    if(!$response){
+      return false;
+    }
+
+    UrlShortener::where('long', $response['long'])->update(['counter' => $response['counter']+1]);
+
+    return $response['long'];
+
   }
 
 }

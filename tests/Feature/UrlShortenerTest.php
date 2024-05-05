@@ -57,7 +57,8 @@ class UrlShortenerTest extends TestCase
     }
 
     public function test_it_redirect_to_original_url(): void{
-        //TODO add a counter to each redirection
+        
+        User::factory()->create();
         $shortener = UrlShortener::factory()->create();
 
         $short = explode('/',$shortener->short);
@@ -65,21 +66,31 @@ class UrlShortenerTest extends TestCase
 
         $response = $this->get('/'.$short);
         $response->assertRedirect($shortener->long);
+        $this->assertDatabaseHas('url_shorteners', ['short' => $shortener->short, 'counter' => $shortener->counter+1]);
     }
 
     public function test_it_can_detect_invalid_shortener(): void{
 
         $urlShortenerService = new UrlShortenerService();
-        $shortener = $urlShortenerService->generateShortUrl($this->faker->url); 
-
-        $short = explode('/',$shortener['short_url']);
+        $shortener = $urlShortenerService->encrypter($this->faker->url); 
+        $short = explode('/',$shortener);
         $short = end($short);
 
-        $this->get('/'.$short)->assertStatus(302); //redirect to 404
+        $this->get('/'.$short)->assertNotFound();
 
     }
 
-    // public function test_it_can_delete_shortener(): void{
-    //     //TODO
-    // }
+    public function test_it_can_delete_shortener(): void{
+
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::factory()->create());
+        $shortener = UrlShortener::factory()->create();
+
+        $this->deleteJson('/api/delete/'.$shortener->id,)
+        ->assertStatus(204)
+        ->assertNoContent();
+
+        $this->assertDatabaseMissing('url_shorteners', ['short' => $shortener->short]);
+
+    }
 }
