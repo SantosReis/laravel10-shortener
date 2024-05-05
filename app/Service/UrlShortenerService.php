@@ -14,7 +14,7 @@ class UrlShortenerService {
     $this->localhost = env('APP_URL');
   }
 
-  protected function encrypter(string $longUrl): string
+  public function encrypter(string $longUrl): string
   {
     $shortenedUrl = substr(
         base64_encode(
