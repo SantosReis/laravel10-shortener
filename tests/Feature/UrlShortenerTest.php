@@ -56,9 +56,28 @@ class UrlShortenerTest extends TestCase
         $response->assertJsonCount(5);
     }
 
-    // public function test_it_redirect_to_original_url(): void{
-    //     //TODO
-    // }
+    public function test_it_redirect_to_original_url(): void{
+        //TODO add a counter to each redirection
+        $shortener = UrlShortener::factory()->create();
+
+        $short = explode('/',$shortener->short);
+        $short = end($short);
+
+        $response = $this->get('/'.$short);
+        $response->assertRedirect($shortener->long);
+    }
+
+    public function test_it_can_detect_invalid_shortener(): void{
+
+        $urlShortenerService = new UrlShortenerService();
+        $shortener = $urlShortenerService->generateShortUrl($this->faker->url); 
+
+        $short = explode('/',$shortener['short_url']);
+        $short = end($short);
+
+        $this->get('/'.$short)->assertStatus(302); //redirect to 404
+
+    }
 
     // public function test_it_can_delete_shortener(): void{
     //     //TODO

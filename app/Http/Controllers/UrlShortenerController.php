@@ -27,4 +27,11 @@ class UrlShortenerController extends Controller
         $list = UrlShortener::take(5)->orderBy('id', 'DESC')->get();
         return response()->json($list, 200);
     }
+
+    public function redirect($shortener){
+        $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortener)->first();
+
+        return $response ? redirect($response->long) : $this->error('', 'Invalid address', 404);
+        // return $response ? redirect($response->long) : abort(404);
+    }
 }

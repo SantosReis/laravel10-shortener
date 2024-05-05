@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -45,14 +46,22 @@ class Handler extends ExceptionHandler
                 return response()->json(['message' => 'unAuthenticated'], 401);
             }
         });
+
         $this->renderable(function (ValidationException $e, $request) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'UnprocessableEntity', 'errors' => []], 422);
             }
         });
+
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'The requested link does not exist'], 400);
+            }
+        });
+
+        $this->renderable(function (RouteNotFoundException $e, $request) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'The requested route does not exist'], 400);
             }
         });
         
