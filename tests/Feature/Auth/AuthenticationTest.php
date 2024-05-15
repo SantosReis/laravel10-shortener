@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,6 +13,7 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
+        $this->withoutMiddleware(VerifyCsrfToken::class);
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
@@ -37,6 +39,7 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_logout(): void
     {
+        $this->withoutMiddleware(VerifyCsrfToken::class);
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/logout');
