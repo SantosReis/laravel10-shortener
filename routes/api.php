@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UrlShortenerController;
+use App\Http\Controllers\Api\V2\UrlShortenerController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
@@ -18,11 +18,11 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
-});
+})->prefix('v2');
 
 
 // Protected routes
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['prefix' => 'v2', 'middleware' => ['auth:sanctum']], function () {
 
     Route::post('/shortener', [UrlShortenerController::class, 'index']);
     Route::get('/shortener-list', [UrlShortenerController::class, 'list']);

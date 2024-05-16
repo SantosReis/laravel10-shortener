@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V2;
 
 use App\Models\UrlShortener;
-use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Service\UrlShortenerService;
 
 class UrlShortenerController extends Controller

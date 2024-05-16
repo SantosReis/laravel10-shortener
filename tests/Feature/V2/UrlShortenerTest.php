@@ -22,7 +22,7 @@ class UrlShortenerTest extends TestCase
         $urlShortenerService = new UrlShortenerService();
         $urlShortener = $urlShortenerService->generateShortUrl($url); 
 
-        $response = $this->json('POST', '/api/shortener', ['url' => $url]); //test a fresh fake url
+        $response = $this->json('POST', '/api/v2/shortener', ['url' => $url]); //test a fresh fake url
         $content = json_decode($response->content());
 
         $this->assertDatabaseHas('url_shorteners', ['long' => $url, 'short' => $urlShortener['short_url']]);
@@ -38,7 +38,7 @@ class UrlShortenerTest extends TestCase
         $urlShortenerService = new UrlShortenerService();
         $urlShortener = $urlShortenerService->generateShortUrl($this->faker->url); 
 
-        $response = $this->json('POST', '/api/shortener', ['url' => $urlShortener['short_url']]); //test a database fake url
+        $response = $this->json('POST', '/api/v2/shortener', ['url' => $urlShortener['short_url']]); //test a database fake url
         $content = json_decode($response->content());
 
         $this->assertDatabaseHas('url_shorteners', ['long' => $urlShortener['long_url'], 'short' => $urlShortener['short_url']]);
@@ -52,7 +52,7 @@ class UrlShortenerTest extends TestCase
         $this->actingAs(User::factory()->create());
         UrlShortener::factory(10)->create();
 
-        $response = $this->json('GET', '/api/shortener-list')
+        $response = $this->json('GET', '/api/v2/shortener-list')
         ->assertStatus(200);
         $response->assertJsonCount(5);
     }
@@ -87,7 +87,7 @@ class UrlShortenerTest extends TestCase
         $this->actingAs(User::factory()->create());
         $shortener = UrlShortener::factory()->create();
 
-        $this->deleteJson('/api/delete/'.$shortener->id,)
+        $this->deleteJson('/api/v2/delete/'.$shortener->id,)
         ->assertStatus(204)
         ->assertNoContent();
 
