@@ -14,8 +14,11 @@ class UrlShortenerService implements UrlShortenerInferface{
   private const RANDOM_BYTES = 32;
   private $localhost;
 
+  private $urlShortener;
+
   public function __construct() {
     $this->localhost = env('APP_URL');
+    $this->urlShortener = new urlShortener;
   }
 
   public function is_encrypited($url){
@@ -26,7 +29,7 @@ class UrlShortenerService implements UrlShortenerInferface{
   {
 
     $findFor = $this->is_encrypited($url) ? 'short' : 'long';
-    $urlShortener = UrlShortener::where($findFor, $url);
+    $urlShortener = $this->urlShortener::where($findFor, $url);
 
     $generated = false;
     if($urlShortener->count()){
@@ -49,25 +52,24 @@ class UrlShortenerService implements UrlShortenerInferface{
   public function persistUrl(string $longUrl, string $shortenedUrl): bool
   {
 
-    $urlShortener = new UrlShortener;
-    $urlShortener->user_id = auth()->user()->id;
-    $urlShortener->long = $longUrl;
-    $urlShortener->short = $shortenedUrl;
-    $urlShortener->save();
+    $this->urlShortener->user_id = auth()->user()->id;
+    $this->urlShortener->long = $longUrl;
+    $this->urlShortener->short = $shortenedUrl;
+    $this->urlShortener->save();
 
-    return (bool)$urlShortener;
+    return (bool)$this->urlShortener;
   }
 
 
   public function redirectToOrigin(string $shortUrl){
 
-    $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortUrl)->first();
+    $response = $this->urlShortener::where('short', '=', env('APP_URL').'/'.$shortUrl)->first();
 
     if(!$response){
       return false;
     }
 
-    UrlShortener::where('long', $response['long'])->update(['counter' => $response['counter']+1]);
+    $this->urlShortener::where('long', $response['long'])->update(['counter' => $response['counter']+1]);
 
     return $response['long'];
 

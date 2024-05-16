@@ -13,11 +13,17 @@ class UrlShortenerController extends Controller
 {
     use HttpResponses;
 
+    private $urlShortenerService;
+
+    public function __construct() {
+    
+        $this->urlShortenerService = new urlShortenerService();
+    }
+
     public function index(Request $request): JsonResponse
     {
         $request->validate(['url' => 'required|url']);
-        $urlShortenerService = new UrlShortenerService();
-        $urlShortener = $urlShortenerService->generateShortUrl($request->url);
+        $urlShortener = $this->urlShortenerService->generateShortUrl($request->url);
 
         $response = array_merge(["status" => true], $urlShortener);
         return response()->json($response, 201);
@@ -31,9 +37,7 @@ class UrlShortenerController extends Controller
 
     public function redirect($shortener){
         
-        $urlShortenerService = new UrlShortenerService();
-        $origin = $urlShortenerService->redirectToOrigin($shortener);
-
+        $origin = $this->urlShortenerService->redirectToOrigin($shortener);
         return $origin ? redirect($origin) : $this->error('', 'Invalid address', 404);
         // return $response ? redirect($response->long) : abort(404);
     }

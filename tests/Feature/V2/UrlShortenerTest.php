@@ -14,13 +14,20 @@ class UrlShortenerTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private $urlShortenerService;
+
+    public function __construct($name = null)
+    {
+        parent::__construct($name);
+        $this->urlShortenerService = new urlShortenerService();
+    }
+
     public function test_it_can_generate_a_shortener(): void
     {
 
         $this->actingAs(User::factory()->create());
         $url = $this->faker->url;
-        $urlShortenerService = new UrlShortenerService();
-        $urlShortener = $urlShortenerService->generateShortUrl($url); 
+        $urlShortener = $this->urlShortenerService->generateShortUrl($url); 
 
         $response = $this->json('POST', '/api/v2/shortener', ['url' => $url]); //test a fresh fake url
         $content = json_decode($response->content());
@@ -35,8 +42,7 @@ class UrlShortenerTest extends TestCase
     public function test_it_can_retrieve_shortener_if_exists(): void
     {
         $this->actingAs(User::factory()->create());
-        $urlShortenerService = new UrlShortenerService();
-        $urlShortener = $urlShortenerService->generateShortUrl($this->faker->url); 
+        $urlShortener = $this->urlShortenerService->generateShortUrl($this->faker->url); 
 
         $response = $this->json('POST', '/api/v2/shortener', ['url' => $urlShortener['short_url']]); //test a database fake url
         $content = json_decode($response->content());
@@ -72,8 +78,7 @@ class UrlShortenerTest extends TestCase
 
     public function test_it_can_detect_invalid_shortener(): void{
 
-        $urlShortenerService = new UrlShortenerService();
-        $shortener = $urlShortenerService->encrypter($this->faker->url); 
+        $shortener = $this->urlShortenerService->encrypter($this->faker->url); 
         $short = explode('/',$shortener);
         $short = end($short);
 
