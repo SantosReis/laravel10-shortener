@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Service\UrlShortenerService;
+use App\Services\UrlShortenerService;
 
 class UrlShortenerController extends Controller
 {

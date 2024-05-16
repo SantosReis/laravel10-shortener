@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
+use App\Traits\Encrypter;
 use App\Models\UrlShortener;
+use App\Interfaces\UrlShortenerInferface;
 
-class UrlShortenerService {
+class UrlShortenerService implements UrlShortenerInferface{
+
+  use Encrypter;
 
   private const SHORT_URL_LENGTH = 9;
   private const RANDOM_BYTES = 32;
@@ -12,19 +16,6 @@ class UrlShortenerService {
 
   public function __construct() {
     $this->localhost = env('APP_URL');
-  }
-
-  public function encrypter(string $longUrl): string
-  {
-    $shortenedUrl = substr(
-        base64_encode(
-            sha1(uniqid(random_bytes(self::RANDOM_BYTES),true))
-        ),
-        0,
-        self::SHORT_URL_LENGTH
-    );
-
-      return $this->localhost.'/'.$shortenedUrl;
   }
 
   public function is_encrypited($url){
@@ -68,9 +59,9 @@ class UrlShortenerService {
   }
 
 
-  public function redirectToOrigin($shortener){
+  public function redirectToOrigin(string $shortUrl){
 
-    $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortener)->first();
+    $response = UrlShortener::where('short', '=', env('APP_URL').'/'.$shortUrl)->first();
 
     if(!$response){
       return false;

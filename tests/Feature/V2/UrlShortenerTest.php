@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\V2;
 
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\UrlShortener;
-use App\Service\UrlShortenerService;
+use App\Services\UrlShortenerService;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

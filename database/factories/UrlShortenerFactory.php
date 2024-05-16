@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
-use App\Service\UrlShortenerService;
+use App\Services\UrlShortenerService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
