@@ -29,13 +29,20 @@ class UrlShortenerController extends Controller
         return response()->json($response, 201);
 
     }
-    public function list(Request $request): JsonResponse
+
+    public function list(): JsonResponse
     {
-        $list = UrlShortener::take(5)->orderBy('id', 'DESC')->get();
+
+        $list = UrlShortener::take(5)
+            ->where('user_id', auth()->user()->id)
+            ->orderBy('id', 'DESC')
+            ->get();
+
         return response()->json($list, 200);
     }
 
-    public function redirect($shortener){
+    public function redirect($shortener)
+    {
         
         $origin = $this->urlShortenerService->redirectToOrigin($shortener);
         return $origin ? redirect($origin) : $this->error('', 'Invalid address', 404);

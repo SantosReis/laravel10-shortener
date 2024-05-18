@@ -25,6 +25,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v2', 'middleware' => ['auth:sanctum']], function () {
 
     Route::post('/shortener', [UrlShortenerController::class, 'index']);
-    Route::get('/shortener-list', [UrlShortenerController::class, 'list']);
-    Route::delete('/delete/{id}', [UrlShortenerController::class, 'delete']);
+    Route::get('/shortener', [UrlShortenerController::class, 'list']);
+    Route::delete('/shortener/{id}', [UrlShortenerController::class, 'delete']);
 });

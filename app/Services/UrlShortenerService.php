@@ -21,7 +21,7 @@ class UrlShortenerService implements UrlShortenerInferface{
     $this->urlShortener = new urlShortener;
   }
 
-  public function is_encrypited($url){
+  public function is_encrypited($url): bool{
     return substr($url, 0, strlen($this->localhost)) == $this->localhost ? true : false;
   }
 
@@ -61,7 +61,8 @@ class UrlShortenerService implements UrlShortenerInferface{
   }
 
 
-  public function redirectToOrigin(string $shortUrl){
+  public function redirectToOrigin(string $shortUrl): string|bool
+  {
 
     $response = $this->urlShortener::where('short', '=', env('APP_URL').'/'.$shortUrl)->first();
 

@@ -54,12 +54,13 @@ class UrlShortenerTest extends TestCase
     }
 
     public function test_it_can_retrieve_latest_shorteners(): void{
-        //TODO if shortener belongs to respective user
-        $this->actingAs(User::factory()->create());
-        UrlShortener::factory(10)->create();
 
-        $response = $this->json('GET', '/api/v2/shortener-list')
-        ->assertStatus(200);
+        $this->actingAs($user = User::factory()->create());
+        UrlShortener::factory(5)->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->json('GET', '/api/v2/shortener')->assertStatus(200);
         $response->assertJsonCount(5);
     }
 
@@ -92,7 +93,7 @@ class UrlShortenerTest extends TestCase
         $this->actingAs(User::factory()->create());
         $shortener = UrlShortener::factory()->create();
 
-        $this->deleteJson('/api/v2/delete/'.$shortener->id,)
+        $this->deleteJson('/api/v2/shortener/'.$shortener->id,)
         ->assertStatus(204)
         ->assertNoContent();
 
