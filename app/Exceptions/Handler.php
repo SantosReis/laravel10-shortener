@@ -47,11 +47,11 @@ class Handler extends ExceptionHandler
             }
         });
 
-        $this->renderable(function (ValidationException $e, $request) {
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['message' => 'UnprocessableEntity', 'errors' => []], 422);
-            }
-        });
+        // $this->renderable(function (ValidationException $e, $request) {
+        //     if ($request->wantsJson() || $request->is('api/*')) {
+        //         return response()->json(['message' => 'UnprocessableEntity', 'errors' => []], 422);
+        //     }
+        // });
 
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->wantsJson() || $request->is('api/*')) {

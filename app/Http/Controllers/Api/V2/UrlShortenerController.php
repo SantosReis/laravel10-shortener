@@ -15,9 +15,11 @@ class UrlShortenerController extends Controller
 
     private $urlShortenerService;
 
+    private $localhost;
+
     public function __construct() {
-    
         $this->urlShortenerService = new urlShortenerService();
+        $this->localhost = env('APP_URL');
     }
 
     public function index(Request $request): JsonResponse
@@ -32,29 +34,25 @@ class UrlShortenerController extends Controller
 
     public function list(): JsonResponse
     {
-
         $list = UrlShortener::take(5)
             ->where('user_id', auth()->user()->id)
             ->orderBy('id', 'DESC')
-            ->get();
-
+            ->get(['long', 'short']);
         return response()->json($list, 200);
     }
 
     public function redirect($shortener)
     {
-        
         $origin = $this->urlShortenerService->redirectToOrigin($shortener);
-        return $origin ? redirect($origin) : $this->error('', 'Invalid address', 404);
-        // return $response ? redirect($response->long) : abort(404);
+        return $origin ? redirect($origin) : $this->error('', 'Not found', 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function delete($id)
+    public function delete($shortenedUrl): JsonResponse
     {
-        $post = UrlShortener::find($id)->delete();
+        UrlShortener::where('short', $this->localhost.'/'.$shortenedUrl)
+            ->where('user_id', auth()->user()->id)
+            ->delete();
+
         return response()->json([], 204);
     }
 

@@ -39,6 +39,19 @@ class UrlShortenerTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function test_it_cant_generate_a_shortener(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $response = $this->json('POST', '/api/v2/shortener');
+        $response->assertJson([
+            'message' => 'The url field is required.',
+            'errors' => [
+                'url' => ["The url field is required."]
+            ] 
+        ])->assertStatus(422);
+
+    }
+
     public function test_it_can_retrieve_shortener_if_exists(): void
     {
         $this->actingAs(User::factory()->create());
@@ -64,8 +77,15 @@ class UrlShortenerTest extends TestCase
         $response->assertJsonCount(5);
     }
 
+    public function test_it_unauthenticated_to_retrieve_latest_shorteners(): void{
+
+        $this->json('GET', '/api/v2/shortener')->assertJson([
+            'message' => 'unAuthenticated',
+        ])->assertStatus(401);
+
+    }
+
     public function test_it_redirect_to_original_url(): void{
-        
         User::factory()->create();
         $shortener = UrlShortener::factory()->create();
 
@@ -73,7 +93,9 @@ class UrlShortenerTest extends TestCase
         $short = end($short);
 
         $response = $this->get('/'.$short);
-        $response->assertRedirect($shortener->long);
+        $response->assertRedirect($shortener->long)
+            ->assertStatus(302);
+
         $this->assertDatabaseHas('url_shorteners', ['short' => $shortener->short, 'counter' => $shortener->counter+1]);
     }
 
@@ -93,7 +115,10 @@ class UrlShortenerTest extends TestCase
         $this->actingAs(User::factory()->create());
         $shortener = UrlShortener::factory()->create();
 
-        $this->deleteJson('/api/v2/shortener/'.$shortener->id,)
+        $short = explode('/',$shortener->short);
+        $short = end($short);
+
+        $this->deleteJson('/api/v2/shortener/'.$short)
         ->assertStatus(204)
         ->assertNoContent();
 
