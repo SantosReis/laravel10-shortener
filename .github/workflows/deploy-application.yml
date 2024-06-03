@@ -10,11 +10,21 @@ jobs:
     name: Create deployment artifacts
     runs-on: ubuntu-latest
     steps:
+      # - uses: actions/checkout@v3
+      # - name: Compile CSS and Javascript
+      #   run: |
+      #     npm install
+      #     npm run prod
+
       - name: Configure PHP 8.2
         uses: shivammathur/setup-php@master
         with:
           php-version: 8.2
           extensions: mbstring, dom, fileinfo, mysql, libxml, xml, xmlwriter, dom, tokenizer, filter, json, phar, pcre, openssl, pdo, intl, curl
+
+      - uses: actions/checkout@v3
+      - name: Copy .env
+        run: cp .env.example .env
 
       - name: Composer install
         run: |
