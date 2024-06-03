@@ -15,3 +15,7 @@ jobs:
         with:
           php-version: 8.2
           extensions: mbstring, dom, fileinfo, mysql, libxml, xml, xmlwriter, dom, tokenizer, filter, json, phar, pcre, openssl, pdo, intl, curl
+
+      - name: Composer install
+        run: |
+          composer install --no-dev --no-interaction --prefer-dist
