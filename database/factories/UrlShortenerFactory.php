@@ -19,8 +19,9 @@ class UrlShortenerFactory extends Factory
     public function definition(): array
     {
 
-        $urlShortenerService = new UrlShortenerService();
+        $urlShortenerService = new UrlShortenerService;
         $fakeUrl = fake()->url();
+
         return [
             'user_id' => function () {
                 // return User::factory()->create()->id;  //generated base on new ones

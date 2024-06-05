@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\V2;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\UrlShortener;
+use App\Models\User;
 use App\Services\UrlShortenerService;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class UrlShortenerTest extends TestCase
 {
@@ -19,7 +19,7 @@ class UrlShortenerTest extends TestCase
     public function __construct($name = null)
     {
         parent::__construct($name);
-        $this->urlShortenerService = new urlShortenerService();
+        $this->urlShortenerService = new urlShortenerService;
     }
 
     public function test_it_can_generate_a_shortener(): void
@@ -46,8 +46,8 @@ class UrlShortenerTest extends TestCase
         $response->assertJson([
             'message' => 'The url field is required.',
             'errors' => [
-                'url' => ["The url field is required."]
-            ] 
+                'url' => ['The url field is required.'],
+            ],
         ])->assertStatus(422);
 
     }
@@ -66,7 +66,8 @@ class UrlShortenerTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_it_can_retrieve_latest_shorteners(): void{
+    public function test_it_can_retrieve_latest_shorteners(): void
+    {
 
         $this->actingAs($user = User::factory()->create());
         UrlShortener::factory(5)->create([
@@ -77,7 +78,8 @@ class UrlShortenerTest extends TestCase
         $response->assertJsonCount(5);
     }
 
-    public function test_it_unauthenticated_to_retrieve_latest_shorteners(): void{
+    public function test_it_unauthenticated_to_retrieve_latest_shorteners(): void
+    {
 
         $this->json('GET', '/api/v2/shortener')->assertJson([
             'message' => 'unAuthenticated',
@@ -99,23 +101,25 @@ class UrlShortenerTest extends TestCase
         $this->assertDatabaseHas('url_shorteners', ['short' => $shortener->short, 'counter' => $shortener->counter+1]);
     }
 
-    public function test_it_can_detect_invalid_shortener(): void{
+    public function test_it_can_detect_invalid_shortener(): void
+    {
 
         $shortener = $this->urlShortenerService->encrypter($this->faker->url); 
-        $short = explode('/',$shortener);
+        $short = explode('/', $shortener);
         $short = end($short);
 
         $this->get('/'.$short)->assertNotFound();
 
     }
 
-    public function test_it_can_delete_shortener(): void{
+    public function test_it_can_delete_shortener(): void
+    {
 
         $this->withoutExceptionHandling();
         $this->actingAs(User::factory()->create());
         $shortener = UrlShortener::factory()->create();
 
-        $short = explode('/',$shortener->short);
+        $short = explode('/', $shortener->short);
         $short = end($short);
 
         $this->deleteJson('/api/v2/shortener/'.$short)

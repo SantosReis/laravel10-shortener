@@ -2,15 +2,15 @@
 
 namespace App\Exceptions;
 
-use Throwable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+// use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler
                 return response()->json(['message' => 'Item Not Found'], 404);
             }
         });
-     
+
         $this->renderable(function (AuthenticationException $e, $request) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'unAuthenticated'], 401);
@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
                 return response()->json(['message' => 'The requested route does not exist'], 400);
             }
         });
-        
+
         $this->reportable(function (Throwable $e) {
             Log::info($e->getMessage());
         });
