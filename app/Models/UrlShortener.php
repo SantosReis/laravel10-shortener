@@ -12,7 +12,7 @@ class UrlShortener extends Model
     //     'user_id', 'long', 'short', 'counter'
     // ];
 
-    public function user()
+    public function user(): object
     {
         return $this->belongsTo(User::class);
     }

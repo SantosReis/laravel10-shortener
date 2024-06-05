@@ -50,8 +50,8 @@ jobs:
       # - name: Run migrations and seeders
       #   run: php artisan migrate:fresh --seed --force
 
-      # - name: Run Pint
-      #   run: ./vendor/bin/pint --test
+      - name: Run Pint
+        run: ./vendor/bin/pint --test
 
       - name: Run Stan
         run: ./vendor/bin/phpstan analyse
@@ -63,14 +63,3 @@ jobs:
         # run: php artisan test
         # run: ./vendor/bin/phpunit
         run: vendor/bin/phpunit tests/
-
-      # - name: Create deployment artifact
-      #   env:
-      #     GITHUB_SHA: ${{ github.sha }}
-      #   run: tar -czf "${GITHUB_SHA}".tar.gz --exclude=*.git --exclude=node_modules *
-
-      # - name: Store artifact for distribution
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: app-build
-      #     path: ${{ github.sha }}.tar.gz
