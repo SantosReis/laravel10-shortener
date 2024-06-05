@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Test Application
 
 on:
   push:
@@ -49,6 +49,9 @@ jobs:
 
       # - name: Run migrations and seeders
       #   run: php artisan migrate:fresh --seed --force
+
+      - name: Run Pint
+        run: ./vendor/bin/pint --test
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         env:
