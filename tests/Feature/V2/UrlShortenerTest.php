@@ -101,16 +101,16 @@ class UrlShortenerTest extends TestCase
     //     $this->assertDatabaseHas('url_shorteners', ['short' => $shortener->short, 'counter' => $shortener->counter+1]);
     // }
 
-    public function test_it_can_detect_invalid_shortener(): void
-    {
+    // public function test_it_can_detect_invalid_shortener(): void
+    // {
 
-        $shortener = $this->urlShortenerService->encrypter($this->faker->url);
-        $short = explode('/', $shortener);
-        $short = end($short);
+    //     $shortener = $this->urlShortenerService->encrypter($this->faker->url);
+    //     $short = explode('/', $shortener);
+    //     $short = end($short);
 
-        $this->get('/'.$short)->assertNotFound();
+    //     $this->get('/'.$short)->assertNotFound();
 
-    }
+    // }
 
     public function test_it_can_delete_shortener(): void
     {

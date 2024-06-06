@@ -27,9 +27,9 @@ class UrlShortenerController extends Controller
 {
     use HttpResponses;
 
-    private $urlShortenerService;
+    private object $urlShortenerService;
 
-    private $localhost;
+    private string $localhost;
 
     public function __construct()
     {
@@ -148,7 +148,7 @@ class UrlShortenerController extends Controller
      *@OA\Response(response=404, description="Not found")
      * )
      */
-    public function redirect($shortener)
+    public function redirect(string $shortener): string|array
     {
         $origin = $this->urlShortenerService->redirectToOrigin($shortener);
 
@@ -175,7 +175,7 @@ class UrlShortenerController extends Controller
      *@OA\Response(response=204, description="No Content"),
      * )
      */
-    public function delete($shortenedUrl): JsonResponse
+    public function delete(string $shortenedUrl): JsonResponse
     {
         UrlShortener::where('short', $this->localhost.'/'.$shortenedUrl)
             ->where('user_id', auth()->user()->id)

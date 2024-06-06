@@ -14,9 +14,9 @@ class UrlShortenerService implements UrlShortenerInferface
 
     private const RANDOM_BYTES = 32;
 
-    private $localhost;
+    private string $localhost;
 
-    private $urlShortener;
+    private object $urlShortener;
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class UrlShortenerService implements UrlShortenerInferface
         $this->urlShortener = new urlShortener;
     }
 
-    public function is_encrypited($url): bool
+    public function is_encrypited(string $url): bool
     {
         return substr($url, 0, strlen($this->localhost)) == $this->localhost ? true : false;
     }

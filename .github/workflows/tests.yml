@@ -66,11 +66,11 @@ jobs:
           DB_DATABASE: database/database.sqlite
         run: php artisan migrate --force
 
-      # - name: Directory Permissions
-      #   run: chmod -R 777 storage bootstrap/cache
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
 
-      # - name: Run migrations and seeders
-      #   run: php artisan migrate:fresh --seed --force
+      - name: Run migrations and seeders
+        run: php artisan migrate:fresh --seed --force
 
       - name: Run Pint
         run: ./vendor/bin/pint --test
