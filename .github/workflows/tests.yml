@@ -6,9 +6,18 @@ on:
       - main
 
 jobs:
-  create-deployment-artifacts:
-    name: Create deployment artifacts
-    runs-on: ubuntu-latest
+  tests:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-22.04, windows-2019]
+        php: [8.1, 8.2, 8.3]
+
+    name: PHP ${{ matrix.php }} - ${{ matrix.os }}
+
+    # runs-on: ubuntu-latest
     steps:
       # - uses: actions/checkout@v3
       # - name: Compile CSS and Javascript
@@ -16,13 +25,24 @@ jobs:
       #     npm install
       #     npm run prod
 
-      - name: Configure PHP 8.2
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - name: Checkout skeleton code
+        uses: actions/checkout@v4
+        with:
+          path: "skeleton"
+          repository: "laravel/laravel"
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@master
         with:
           php-version: 8.2
           extensions: mbstring, dom, fileinfo, mysql, libxml, xml, xmlwriter, dom, tokenizer, filter, json, phar, pcre, openssl, pdo, intl, curl
 
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
       - name: Copy .env
         run: cp .env.example .env
 
@@ -60,6 +80,6 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-        # run: php artisan test
+        run: php artisan test
         # run: ./vendor/bin/phpunit
-        run: vendor/bin/phpunit tests/
+        #run: vendor/bin/phpunit tests/
