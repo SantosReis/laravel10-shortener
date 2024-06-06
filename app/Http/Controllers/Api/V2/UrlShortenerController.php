@@ -152,7 +152,7 @@ class UrlShortenerController extends Controller
     {
         $origin = $this->urlShortenerService->redirectToOrigin($shortener);
 
-        return $origin ? redirect($origin) : $this->error('', 'Not found', 404);
+        return $origin ? redirect($origin) : $this->error([], 'Not found', 404);
     }
 
     /**
